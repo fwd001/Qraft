@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- 二维码定位图案 - 左上 (往中心靠拢) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M26,26h18v18h-18z"/>
+    <path
+        android:fillColor="#4F46E5"
+        android:pathData="M29,29h12v12h-12z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M32,32h6v6h-6z"/>
+
+    <!-- 二维码定位图案 - 右上 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M64,26h18v18h-18z"/>
+    <path
+        android:fillColor="#4F46E5"
+        android:pathData="M67,29h12v12h-12z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M70,32h6v6h-6z"/>
+
+    <!-- 二维码定位图案 - 左下 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M26,64h18v18h-18z"/>
+    <path
+        android:fillColor="#4F46E5"
+        android:pathData="M29,67h12v12h-12z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M32,70h6v6h-6z"/>
+
+    <!-- 中间数据区域 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,50h4v4h-4z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M58,50h4v4h-4z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M66,50h4v4h-4z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,58h4v4h-4z"/>
+    <path
+        android:fillColor="#FBBF24"
+        android:pathData="M58,58h4v4h-4z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M66,58h4v4h-4z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,66h4v4h-4z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M58,66h4v4h-4z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M66,66h4v4h-4z"/>
+
+    <!-- 装饰点 -->
+    <path
+        android:fillColor="#C4B5FD"
+        android:pathData="M50,44h3v3h-3z"/>
+    <path
+        android:fillColor="#C4B5FD"
+        android:pathData="M66,44h3v3h-3z"/>
+    <path
+        android:fillColor="#C4B5FD"
+        android:pathData="M50,74h3v3h-3z"/>
+    <path
+        android:fillColor="#C4B5FD"
+        android:pathData="M66,74h3v3h-3z"/>
+
+    <!-- 星星装饰 -->
+    <path
+        android:fillColor="#FBBF24"
+        android:pathData="M76,36l1,2 2.5,0.5 -1.8,1.8 0.4,2.5 -2.1,-1.1 -2.1,1.1 0.4,-2.5 -1.8,-1.8 2.5,-0.5z"/>
+</vector>
