@@ -382,7 +382,7 @@ private fun AppInfoSection() {
         Spacer(Modifier.height(4.dp))
 
         Text(
-            text = "© 2024 QRCodeKit. All rights reserved.",
+            text = "© 2024 Qraft. @wd.f",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
         )
