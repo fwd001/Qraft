@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Qraft</string>
+    <string name="input_hint">请输入要生成二维码的文本…</string>
+    <string name="generate_button">生成二维码</string>
+    <string name="generating_button">生成中...</string>
+    <string name="clear_button">清空</string>
+    <string name="history_title">历史记录</string>
+    <string name="settings_title">生成设置</string>
+    <string name="page_indicator">第 %1$d / %2$d 页</string>
+    <string name="char_count">%1$d 字</string>
+    <string name="no_history">暂无历史记录</string>
+    <string name="delete_history">删除</string>
+    <string name="view_history">查看</string>
+    <string name="history_item_title">历史 #%1$d</string>
+    <string name="history_created_at">创建于 %1$s</string>
+    <string name="qr_codes_count">共 %1$d 个二维码</string>
+    <string name="empty_input_error">请输入文本内容</string>
+    <string name="clear_all_history">清除全部</string>
+    <string name="clear_all_history_title">清除全部历史</string>
+    <string name="clear_all_history_confirm">确定要清除所有历史记录吗？此操作不可恢复。</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+    <string name="qr_generated_success">二维码生成成功！</string>
+    <string name="close">关闭</string>
+    <string name="settings">设置</string>
+    <string name="chunk_size_label">每二维码字符数</string>
+    <string name="error_correction_label">纠错等级</string>
+    <string name="chunk_size_hint">字符数越少，二维码密度越低，扫描成功率越高</string>
+    <string name="error_correction_hint">纠错等级越高，容错能力越强，但存储容量越少</string>
+    <string name="settings_done">完成</string>
+</resources>
