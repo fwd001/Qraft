@@ -382,7 +382,7 @@ private fun AppInfoSection() {
         Spacer(Modifier.height(4.dp))
 
         Text(
-            text = "© 2024 Qraft. @wd.f",
+            text = "© 2026 Qraft. @wd.f",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
         )
