@@ -41,10 +41,11 @@ captures/
 .idea/libraries
 .idea/caches
 
-# Keystore files
+# Keystore files - NEVER COMMIT
 *.jks
 *.keystore
-!keystore.jks
+keystore.jks
+keystore.properties
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
