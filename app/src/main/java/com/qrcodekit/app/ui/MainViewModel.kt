@@ -284,11 +284,11 @@ class MainViewModel @Inject constructor(
     }
 
     fun setChunkSize(size: ChunkSize) {
-        // 1500字符模式强制使用L级别纠错，非1500模式重置为M级别
-        val newErrorLevel = when {
-            size.isSingleQr -> ErrorCorrectionLevel.L  // 1500模式强制L级
-            _uiState.value.errorCorrectionLevel == ErrorCorrectionLevel.L -> ErrorCorrectionLevel.M  // 从1500切换出来，重置为M
-            else -> _uiState.value.errorCorrectionLevel  // 其他情况保持不变
+        // 1500字符模式强制使用L级别纠错，其他模式保持用户之前选择的纠错等级
+        val newErrorLevel = if (size.isSingleQr) {
+            ErrorCorrectionLevel.L
+        } else {
+            _uiState.value.errorCorrectionLevel
         }
 
         _uiState.update {
@@ -299,7 +299,7 @@ class MainViewModel @Inject constructor(
         }
         // 保存设置
         settingsManager.saveChunkSize(size)
-        if (newErrorLevel != _uiState.value.errorCorrectionLevel) {
+        if (size.isSingleQr) {
             settingsManager.saveErrorCorrectionLevel(newErrorLevel)
         }
     }

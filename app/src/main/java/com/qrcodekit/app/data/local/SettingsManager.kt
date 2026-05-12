@@ -54,8 +54,8 @@ class SettingsManager @Inject constructor(
         // 当前缓存版本号 - 每次数据结构变更时递增
         const val CURRENT_CACHE_VERSION = 1
 
-        // 默认值：700字，M级纠错
+        // 默认值：700字，L级纠错
         val DEFAULT_CHUNK_SIZE = ChunkSize.SIZE_700
-        val DEFAULT_ERROR_LEVEL = ErrorCorrectionLevel.M
+        val DEFAULT_ERROR_LEVEL = ErrorCorrectionLevel.L
     }
 }

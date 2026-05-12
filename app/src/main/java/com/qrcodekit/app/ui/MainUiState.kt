@@ -19,7 +19,7 @@ data class MainUiState(
     val showFullScreenQR: Boolean = false,
     val fullScreenQRIndex: Int = 0,
     val showSettings: Boolean = false,
-    val errorCorrectionLevel: ErrorCorrectionLevel = ErrorCorrectionLevel.M,
+    val errorCorrectionLevel: ErrorCorrectionLevel = ErrorCorrectionLevel.L,
     val chunkSize: ChunkSize = ChunkSize.SIZE_700,
     val isFromHistory: Boolean = false  // 是否从历史加载，避免重复保存
 ) {
