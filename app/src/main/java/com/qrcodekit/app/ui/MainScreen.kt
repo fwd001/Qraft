@@ -151,8 +151,10 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
         if (uiState.showSettings) SettingsDialog(
             currentErrorLevel = uiState.errorCorrectionLevel,
             currentChunkSize = uiState.chunkSize,
+            customChunkSizeValue = uiState.customChunkSizeValue,
             onErrorLevelChange = { viewModel.setErrorCorrectionLevel(it) },
             onChunkSizeChange = { viewModel.setChunkSize(it) },
+            onCustomChunkSizeValueChange = { viewModel.setCustomChunkSizeValue(it) },
             onDismiss = { viewModel.hideSettings() }
         )
 
@@ -218,8 +220,9 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
 
 @Composable
 private fun TextInputSection(uiState: MainUiState, viewModel: MainViewModel) {
-    val segments = if (!uiState.is1500Mode && uiState.charCount > uiState.chunkSize.value) {
-        (uiState.charCount / uiState.chunkSize.value.toDouble()).let {
+    val effectiveSize = uiState.effectiveChunkSize
+    val segments = if (!uiState.is1500Mode && uiState.charCount > effectiveSize) {
+        (uiState.charCount / effectiveSize.toDouble()).let {
             if (it == it.toInt().toDouble()) it.toInt() else it.toInt() + 1
         }
     } else 0
@@ -266,9 +269,10 @@ private fun TextInputSection(uiState: MainUiState, viewModel: MainViewModel) {
                     )
                     Spacer(Modifier.width(2.dp))
                     Text(
-                        text = "${uiState.chunkSize.displayName}" +
-                                if (uiState.is1500Mode) " | L级"
-                                else " | ${uiState.errorCorrectionLevel.displayName}",
+                        text = if (uiState.chunkSize.isCustom) "${uiState.customChunkSizeValue}w"
+                               else uiState.chunkSize.displayName +
+                                        if (uiState.is1500Mode) " | L级"
+                                        else " | ${uiState.errorCorrectionLevel.displayName}",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -318,8 +322,10 @@ private fun ButtonRow(uiState: MainUiState, viewModel: MainViewModel, qrSize: In
 private fun SettingsDialog(
     currentErrorLevel: ErrorCorrectionLevel,
     currentChunkSize: ChunkSize,
+    customChunkSizeValue: Int,
     onErrorLevelChange: (ErrorCorrectionLevel) -> Unit,
     onChunkSizeChange: (ChunkSize) -> Unit,
+    onCustomChunkSizeValueChange: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
@@ -331,7 +337,7 @@ private fun SettingsDialog(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // 字符数选择
-                ChunkSizeSection(currentChunkSize, onChunkSizeChange, onDismiss)
+                ChunkSizeSection(currentChunkSize, customChunkSizeValue, onChunkSizeChange, onCustomChunkSizeValueChange, onDismiss)
 
                 // 纠错等级选择
                 ErrorLevelSection(currentErrorLevel, currentChunkSize, onErrorLevelChange, onDismiss)
@@ -340,7 +346,12 @@ private fun SettingsDialog(
                 AppInfoSection()
             }
         },
-        confirmButton = {}
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("关闭")
+            }
+        },
+        dismissButton = {}
     )
 }
 
@@ -392,15 +403,17 @@ private fun AppInfoSection() {
 @Composable
 private fun ChunkSizeSection(
     currentChunkSize: ChunkSize,
+    customChunkSizeValue: Int,
     onChunkSizeChange: (ChunkSize) -> Unit,
+    onCustomChunkSizeValueChange: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(text = "每二维码字符数", style = MaterialTheme.typography.titleSmall)
 
-        // 500, 600, 700 一行
+        // 500, 600, 700, 800 一行
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            listOf(ChunkSize.SIZE_500, ChunkSize.SIZE_600, ChunkSize.SIZE_700).forEach { size ->
+            listOf(ChunkSize.SIZE_500, ChunkSize.SIZE_600, ChunkSize.SIZE_700, ChunkSize.SIZE_800).forEach { size ->
                 ChunkSizeChip(
                     label = size.displayName,
                     selected = currentChunkSize == size,
@@ -410,20 +423,48 @@ private fun ChunkSizeSection(
             }
         }
 
-        // 800, 3000 一行
+        // 1500(单码), 自定义 一行
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            ChunkSizeChip(
-                label = ChunkSize.SIZE_800.displayName,
-                selected = currentChunkSize == ChunkSize.SIZE_800,
-                onClick = { onChunkSizeChange(ChunkSize.SIZE_800); onDismiss() },
-                modifier = Modifier.weight(1f)
-            )
             ChunkSizeChip(
                 label = "${ChunkSize.SIZE_1500.displayName} (单码)",
                 selected = currentChunkSize == ChunkSize.SIZE_1500,
                 onClick = { onChunkSizeChange(ChunkSize.SIZE_1500); onDismiss() },
                 modifier = Modifier.weight(1f)
             )
+            ChunkSizeChip(
+                label = ChunkSize.CUSTOM.displayName,
+                selected = currentChunkSize.isCustom,
+                onClick = { onChunkSizeChange(ChunkSize.CUSTOM) },
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        // 自定义数量输入框
+        AnimatedVisibility(visible = currentChunkSize.isCustom) {
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                var textValue by remember { mutableStateOf(customChunkSizeValue.toString()) }
+
+                OutlinedTextField(
+                    value = textValue,
+                    onValueChange = { newValue ->
+                        val filtered = newValue.filter { it.isDigit() }.take(3)
+                        val intValue = filtered.toIntOrNull()
+                        if (intValue != null) {
+                            val clamped = intValue.coerceIn(10, 800)
+                            textValue = clamped.toString()
+                            onCustomChunkSizeValueChange(clamped)
+                        } else {
+                            textValue = ""
+                        }
+                    },
+                    label = { Text("自定义字符数 (10-800)") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+                        keyboardType = androidx.compose.ui.text.input.KeyboardType.Number
+                    )
+                )
+            }
         }
 
         // 1500模式提示

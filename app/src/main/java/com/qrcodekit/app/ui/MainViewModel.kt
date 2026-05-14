@@ -37,10 +37,12 @@ class MainViewModel @Inject constructor(
     private fun loadSavedSettings() {
         val savedChunkSize = settingsManager.loadChunkSize()
         val savedErrorLevel = settingsManager.loadErrorCorrectionLevel()
+        val savedCustomChunkSizeValue = settingsManager.loadCustomChunkSizeValue()
         _uiState.update {
             it.copy(
                 chunkSize = savedChunkSize,
-                errorCorrectionLevel = savedErrorLevel
+                errorCorrectionLevel = savedErrorLevel,
+                customChunkSizeValue = savedCustomChunkSizeValue
             )
         }
     }
@@ -116,7 +118,7 @@ class MainViewModel @Inject constructor(
                         }
                     } else {
                         // 多码模式
-                        val maxChars = _uiState.value.chunkSize.value
+                        val maxChars = _uiState.value.effectiveChunkSize
                         val textSegments = qrCodeGenerator.splitText(actualText, maxChars)
                         segmentCount = textSegments.size
 
@@ -302,5 +304,11 @@ class MainViewModel @Inject constructor(
         if (size.isSingleQr) {
             settingsManager.saveErrorCorrectionLevel(newErrorLevel)
         }
+    }
+
+    fun setCustomChunkSizeValue(value: Int) {
+        val clamped = value.coerceIn(10, 800)
+        _uiState.update { it.copy(customChunkSizeValue = clamped) }
+        settingsManager.saveCustomChunkSizeValue(clamped)
     }
 }

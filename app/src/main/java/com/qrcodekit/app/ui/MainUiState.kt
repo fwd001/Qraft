@@ -21,6 +21,7 @@ data class MainUiState(
     val showSettings: Boolean = false,
     val errorCorrectionLevel: ErrorCorrectionLevel = ErrorCorrectionLevel.L,
     val chunkSize: ChunkSize = ChunkSize.SIZE_700,
+    val customChunkSizeValue: Int = 500,
     val isFromHistory: Boolean = false  // 是否从历史加载，避免重复保存
 ) {
     val charCount: Int get() = inputText.length
@@ -38,4 +39,5 @@ data class MainUiState(
 
     val effectiveMaxLength: Int get() = if (chunkSize.isSingleQr) MAX_INPUT_LENGTH_1500 else MAX_INPUT_LENGTH
     val is1500Mode: Boolean get() = chunkSize.isSingleQr
+    val effectiveChunkSize: Int get() = if (chunkSize.isCustom) customChunkSizeValue else chunkSize.value
 }

@@ -7,15 +7,17 @@ enum class ErrorCorrectionLevel(val displayName: String, val description: String
     H("高", "容量最小，纠错能力30%")
 }
 
-enum class ChunkSize(val value: Int, val displayName: String, val isSingleQr: Boolean = false) {
-    SIZE_500(500, "500字"),
-    SIZE_600(600, "600字"),
-    SIZE_700(700, "700字"),
-    SIZE_800(800, "800字"),
-    SIZE_1500(1500, "1500字", isSingleQr = true);  // 强制单二维码，纠错等级L
+enum class ChunkSize(val value: Int, val displayName: String, val isSingleQr: Boolean = false, val isCustom: Boolean = false) {
+    SIZE_500(500, "500w"),
+    SIZE_600(600, "600w"),
+    SIZE_700(700, "700w"),
+    SIZE_800(800, "800w"),
+    SIZE_1500(1500, "1500w", isSingleQr = true),  // 强制单二维码，纠错等级L
+    CUSTOM(-1, "自定义", isCustom = true);
 
     companion object {
         fun fromValue(value: Int): ChunkSize {
+            if (value == -1) return CUSTOM
             return entries.find { it.value == value } ?: SIZE_700
         }
     }

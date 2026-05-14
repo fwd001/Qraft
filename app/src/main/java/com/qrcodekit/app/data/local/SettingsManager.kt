@@ -23,6 +23,14 @@ class SettingsManager @Inject constructor(
         return ChunkSize.fromValue(value)
     }
 
+    fun saveCustomChunkSizeValue(value: Int) {
+        prefs.edit().putInt(KEY_CUSTOM_CHUNK_SIZE, value).apply()
+    }
+
+    fun loadCustomChunkSizeValue(): Int {
+        return prefs.getInt(KEY_CUSTOM_CHUNK_SIZE, DEFAULT_CUSTOM_CHUNK_SIZE)
+    }
+
     fun saveErrorCorrectionLevel(level: ErrorCorrectionLevel) {
         prefs.edit().putString(KEY_ERROR_LEVEL, level.name).apply()
     }
@@ -48,6 +56,7 @@ class SettingsManager @Inject constructor(
     companion object {
         private const val PREFS_NAME = "qrcode_settings"
         private const val KEY_CHUNK_SIZE = "chunk_size"
+        private const val KEY_CUSTOM_CHUNK_SIZE = "custom_chunk_size"
         private const val KEY_ERROR_LEVEL = "error_level"
         private const val KEY_CACHE_VERSION = "cache_version"
 
@@ -57,5 +66,6 @@ class SettingsManager @Inject constructor(
         // 默认值：700字，L级纠错
         val DEFAULT_CHUNK_SIZE = ChunkSize.SIZE_700
         val DEFAULT_ERROR_LEVEL = ErrorCorrectionLevel.L
+        const val DEFAULT_CUSTOM_CHUNK_SIZE = 500
     }
 }
