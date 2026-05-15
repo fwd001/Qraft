@@ -307,7 +307,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun setCustomChunkSizeValue(value: Int) {
-        val clamped = value.coerceIn(10, 800)
+        val clamped = value.coerceIn(1, 800)
         _uiState.update { it.copy(customChunkSizeValue = clamped) }
         settingsManager.saveCustomChunkSizeValue(clamped)
     }

@@ -450,14 +450,14 @@ private fun ChunkSizeSection(
                         val filtered = newValue.filter { it.isDigit() }.take(3)
                         val intValue = filtered.toIntOrNull()
                         if (intValue != null) {
-                            val clamped = intValue.coerceIn(10, 800)
+                            val clamped = intValue.coerceIn(1, 800)
                             textValue = clamped.toString()
                             onCustomChunkSizeValueChange(clamped)
                         } else {
                             textValue = ""
                         }
                     },
-                    label = { Text("自定义字符数 (10-800)") },
+                    label = { Text("自定义字符数 (1-800)") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
