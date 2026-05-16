@@ -10,6 +10,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,22 +45,31 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.qrcodekit.app.R
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 
@@ -202,6 +212,7 @@ fun QRCodeCard(
     onPageChanged: (Int) -> Unit,
     onQRCodeClick: () -> Unit,
     showPagination: Boolean = true,
+    hintText: String? = null,
     modifier: Modifier = Modifier
 ) {
     // 创建 PagerState
@@ -240,12 +251,23 @@ fun QRCodeCard(
                 containerColor = MaterialTheme.colorScheme.surfaceVariant
             )
         ) {
+            if (hintText != null) {
+                Text(
+                    text = hintText,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp, top = 6.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
             if (qrCodes.isNotEmpty()) {
                 HorizontalPager(
                     state = pagerState,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
+                        .padding(if (hintText != null) 4.dp else 8.dp),
                     beyondViewportPageCount = 1,
                     pageSpacing = 16.dp,
                     contentPadding = PaddingValues(horizontal = 16.dp)
@@ -422,13 +444,21 @@ fun FullScreenQRDialog(
         pageCount = { qrCodes.size }
     )
 
-    // 监听页面变化
+    // 监听用户滑动引起的页面变化
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }
             .distinctUntilChanged()
             .collect { page ->
                 onPageChanged(page)
             }
+    }
+
+    // 音量键导航
+    val focusRequester = remember { FocusRequester() }
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 
     Dialog(
@@ -442,6 +472,31 @@ fun FullScreenQRDialog(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .focusRequester(focusRequester)
+                .focusable()
+                .onKeyEvent { keyEvent ->
+                    if (keyEvent.type == KeyEventType.KeyDown) {
+                        when (keyEvent.key) {
+                            Key.VolumeUp -> {
+                                if (pagerState.currentPage > 0) {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                                    }
+                                }
+                                true
+                            }
+                            Key.VolumeDown -> {
+                                if (pagerState.currentPage < qrCodes.size - 1) {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                                    }
+                                }
+                                true
+                            }
+                            else -> false
+                        }
+                    } else false
+                }
                 .background(Color.Black)
         ) {
             // 二维码横向滑动 - 放在最底层

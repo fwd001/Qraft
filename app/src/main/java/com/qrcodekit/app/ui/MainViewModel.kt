@@ -175,6 +175,21 @@ class MainViewModel @Inject constructor(
         _uiState.update { it.copy(currentPage = page) }
     }
 
+    fun navigateToPreviousPage() {
+        val current = _uiState.value.currentPage
+        if (current > 0) {
+            _uiState.update { it.copy(currentPage = current - 1) }
+        }
+    }
+
+    fun navigateToNextPage() {
+        val current = _uiState.value.currentPage
+        val total = _uiState.value.totalPages
+        if (total > 1 && current < total - 1) {
+            _uiState.update { it.copy(currentPage = current + 1) }
+        }
+    }
+
     fun clearInput() {
         _uiState.update {
             it.copy(
@@ -264,6 +279,21 @@ class MainViewModel @Inject constructor(
 
     fun onFullScreenPageChanged(page: Int) {
         _uiState.update { it.copy(fullScreenQRIndex = page) }
+    }
+
+    fun navigateFullScreenToPrevious() {
+        val current = _uiState.value.fullScreenQRIndex
+        if (current > 0) {
+            _uiState.update { it.copy(fullScreenQRIndex = current - 1) }
+        }
+    }
+
+    fun navigateFullScreenToNext() {
+        val current = _uiState.value.fullScreenQRIndex
+        val total = _uiState.value.totalPages
+        if (total > 1 && current < total - 1) {
+            _uiState.update { it.copy(fullScreenQRIndex = current + 1) }
+        }
     }
 
     fun clearError() {

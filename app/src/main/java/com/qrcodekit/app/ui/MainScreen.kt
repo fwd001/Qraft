@@ -52,10 +52,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,8 +75,36 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
+fun MainScreen(
+    onVolumeUp: (() -> Boolean) -> Unit = {},
+    onVolumeDown: (() -> Boolean) -> Unit = {},
+    viewModel: MainViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // 注册音量键导航
+    val hasMultiplePagesState = rememberUpdatedState(uiState.hasQRCodes && uiState.totalPages > 1)
+    val isFullScreenState = rememberUpdatedState(uiState.showFullScreenQR)
+    DisposableEffect(Unit) {
+        onVolumeUp {
+            if (hasMultiplePagesState.value) {
+                if (isFullScreenState.value) viewModel.navigateFullScreenToPrevious()
+                else viewModel.navigateToPreviousPage()
+                true
+            } else false
+        }
+        onVolumeDown {
+            if (hasMultiplePagesState.value) {
+                if (isFullScreenState.value) viewModel.navigateFullScreenToNext()
+                else viewModel.navigateToNextPage()
+                true
+            } else false
+        }
+        onDispose {
+            onVolumeUp { false }
+            onVolumeDown { false }
+        }
+    }
 
     // 计算二维码尺寸
     val density = LocalDensity.current
@@ -133,7 +163,8 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                     currentPage = uiState.currentPage,
                     onPageChanged = { viewModel.onPageChanged(it) },
                     onQRCodeClick = { viewModel.showFullScreenQR(uiState.currentPage) },
-                    showPagination = !uiState.is1500Mode
+                    showPagination = !uiState.is1500Mode,
+                    hintText = if (uiState.totalPages > 1) "小技巧：试试用【音量减】按键切换下一张" else null
                 )
             }
         }
