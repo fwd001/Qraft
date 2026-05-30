@@ -17,3 +17,11 @@
 
 # Keep Compose
 -dontwarn androidx.compose.**
+
+# Keep ML Kit Barcode Scanning
+-keep class com.google.mlkit.** { *; }
+-dontwarn com.google.mlkit.**
+
+# Keep CameraX
+-keep class androidx.camera.** { *; }
+-dontwarn androidx.camera.**

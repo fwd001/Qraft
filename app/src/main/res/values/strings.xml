@@ -29,4 +29,40 @@
     <string name="chunk_size_hint">字符数越少，二维码密度越低，扫描成功率越高</string>
     <string name="error_correction_hint">纠错等级越高，容错能力越强，但存储容量越少</string>
     <string name="settings_done">完成</string>
+
+    <!-- Shortcuts -->
+    <string name="shortcut_generate">生成二维码</string>
+    <string name="shortcut_generate_long">文字转二维码</string>
+    <string name="shortcut_scan">扫码</string>
+    <string name="shortcut_scan_long">扫描二维码</string>
+
+    <!-- Scan -->
+    <string name="tab_generate">生成</string>
+    <string name="tab_scan">扫码</string>
+    <string name="start_scan">开始扫描</string>
+    <string name="stop_scan">停止</string>
+    <string name="continuous_scan">连续扫码</string>
+    <string name="start_continuous_scan">开始连续扫描</string>
+    <string name="end_scan">结束扫码</string>
+    <string name="upload_image">上传图片解析</string>
+    <string name="scan_hint">对准二维码即可自动识别</string>
+    <string name="scan_detected">已识别第 %1$d 个二维码</string>
+    <string name="scan_duplicate">此码已识别，请换下一张</string>
+    <string name="scan_continuous_end">连续扫码结束，共识别 %1$d 个二维码</string>
+    <string name="scan_no_result">未识别到任何二维码</string>
+    <string name="scan_no_qr">未识别到二维码</string>
+    <string name="scan_history_title">扫描历史</string>
+    <string name="scan_history_empty">暂无记录</string>
+    <string name="scan_history_clear">清空</string>
+    <string name="scan_history_clear_confirm">确定清空所有扫描历史？</string>
+    <string name="copied">已复制</string>
+    <string name="open_link">打开链接</string>
+    <string name="camera_permission_denied">已拒绝摄像头权限，请在系统设置中允许访问</string>
+    <string name="go_settings">去设置</string>
+    <string name="camera_unavailable">无法打开摄像头</string>
+    <string name="image_load_failed">图片加载失败</string>
+    <string name="camera_occupied">摄像头被占用，请关闭其他使用摄像头的应用后重试</string>
+    <string name="device_no_camera">当前设备不支持摄像头</string>
+    <string name="continuous_switch_hint">已识别完成，请切换下一张二维码或点击\'结束扫码\'</string>
+    <string name="scan_char_count">%1$d 字符</string>
 </resources>
