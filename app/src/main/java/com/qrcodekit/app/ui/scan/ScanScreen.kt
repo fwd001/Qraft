@@ -32,7 +32,6 @@ import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -90,13 +89,6 @@ fun ScanScreen(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
         viewModel.onPermissionResult(granted)
-    }
-
-    // Image picker
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let { viewModel.decodeImage(it) }
     }
 
     // Lifecycle: auto-stop camera on pause
@@ -187,7 +179,6 @@ fun ScanScreen(
                     viewModel = viewModel,
                     lifecycleOwner = lifecycleOwner,
                     permissionLauncher = permissionLauncher,
-                    imagePickerLauncher = imagePickerLauncher,
                     showClearDialog = showClearDialog,
                     onClearClick = { showClearDialog = true }
                 )
@@ -392,7 +383,6 @@ private fun ScanIdleContent(
     viewModel: ScanViewModel,
     lifecycleOwner: LifecycleOwner,
     permissionLauncher: androidx.activity.result.ActivityResultLauncher<String>,
-    imagePickerLauncher: androidx.activity.result.ActivityResultLauncher<String>,
     showClearDialog: Boolean,
     onClearClick: () -> Unit
 ) {
@@ -456,17 +446,6 @@ private fun ScanIdleContent(
                         )
                     }
 
-                    Spacer(Modifier.height(8.dp))
-
-                    OutlinedButton(
-                        onClick = { imagePickerLauncher.launch("image/*") },
-                        shape = RoundedCornerShape(28.dp),
-                        modifier = Modifier.fillMaxWidth().height(44.dp)
-                    ) {
-                        Icon(Icons.Default.Upload, null, Modifier.size(18.dp))
-                        Spacer(Modifier.width(8.dp))
-                        Text("上传图片解析")
-                    }
                 }
             }
 
